@@ -4,11 +4,11 @@ package com.filecrypt.sylvainandyann.cryptodroid.Models;
 public class CryptoFileManager {
 
 
-    public static boolean isLoginValid(String userName, String password){
+    public  boolean isLoginValid(String userName, String password){
         return false;
     }
 
-    public static boolean isLoginExist(String userName, String password){
+    public  boolean isLoginExist(){
         return false;
     }
 
