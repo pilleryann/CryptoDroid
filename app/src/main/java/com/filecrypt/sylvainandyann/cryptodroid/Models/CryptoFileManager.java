@@ -42,8 +42,15 @@ public class CryptoFileManager {
 
 
     }
-
     private CryptoFileManager (){
+
+    }
+
+    public void addCategorie(String categorie){
+
+    }
+
+    public void cryptFile(int categorieIndex,String file){
 
     }
 }
