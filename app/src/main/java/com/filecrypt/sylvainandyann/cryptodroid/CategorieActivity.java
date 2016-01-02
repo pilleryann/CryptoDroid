@@ -1,16 +1,35 @@
 package com.filecrypt.sylvainandyann.cryptodroid;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class CategorieActivity extends AppCompatActivity {
+import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
+
+import java.util.List;
+
+public class CategorieActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+
+    public static final String EXTRA_CATEGORIE_INDEX="CATEGORIE_INDEX";
+    private ListView listCategories;
+    private CryptoFileManager fileManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorie);
+        listCategories =(ListView)findViewById(R.id.listViewCategorie);
+        listCategories.setOnItemClickListener(this);
+
+        String[] listCategoriesString = fileManager.getCategorieList();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listCategoriesString);
+        listCategories.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -33,5 +52,16 @@ public class CategorieActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        selectCategorie(position);
+    }
+
+    private void selectCategorie(int fileIndex){
+        Intent intent = new Intent(this, CategorieActivity.class);
+        intent.putExtra(EXTRA_CATEGORIE_INDEX,fileIndex);
+        startActivity(intent);
     }
 }
