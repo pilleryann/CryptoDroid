@@ -12,8 +12,6 @@ import android.widget.ListView;
 
 import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
 
-import java.util.List;
-
 public class CategorieActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     public static final String EXTRA_CATEGORIE_INDEX="CATEGORIE_INDEX";
@@ -25,7 +23,7 @@ public class CategorieActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorie);
 
-        fileManager = CryptoFileManager.getIntance();
+        fileManager = CryptoFileManager.getInstance();
 
         listCategories =(ListView)findViewById(R.id.listViewCategorie);
         listCategories.setOnItemClickListener(this);
@@ -63,7 +61,7 @@ public class CategorieActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void selectCategorie(int fileIndex){
-        Intent intent = new Intent(this, CategorieActivity.class);
+        Intent intent = new Intent(this, FilesActivity.class);
         intent.putExtra(EXTRA_CATEGORIE_INDEX,fileIndex);
         startActivity(intent);
     }

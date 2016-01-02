@@ -6,11 +6,12 @@ public class CryptoFileManager {
     private static CryptoFileManager instance;
 
     public  boolean isLoginValid(String userName, String password){
-        return false;
+
+        return userName.equals("user") && password.equals("123");
     }
 
     public  boolean isLoginExist(){
-        return false;
+        return true;
     }
 
     /**
@@ -23,18 +24,20 @@ public class CryptoFileManager {
     }
 
     public String[] getCategorieList(){
-        return null;
+        String[] result = {"Images","Photos","Text"};
+        return result;
     }
 
     public String[] getFilesListFromCategorie(int categorieIndex){
-        return null;
+        String[][] results = {{"Image1","Image2","Image3"},{"Photo1","Photo2","Photo3"},{"Text1","Text2","Text3"}};
+        return results[categorieIndex];
     }
 
     public boolean openDecryptedFile(int fileIndex){
-        return false;
+        return true;
     }
 
-    public static CryptoFileManager getIntance(){
+    public static CryptoFileManager getInstance(){
         if(instance==null){
             instance= new CryptoFileManager();
         }
@@ -53,4 +56,8 @@ public class CryptoFileManager {
     public void cryptFile(int categorieIndex,String file){
 
     }
+
+
+
+
 }

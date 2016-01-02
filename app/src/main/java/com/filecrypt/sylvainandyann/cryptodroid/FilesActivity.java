@@ -1,5 +1,6 @@
 package com.filecrypt.sylvainandyann.cryptodroid;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,8 +21,10 @@ public class FilesActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
-        fileManager = CryptoFileManager.getIntance();
-        int indexCategories = savedInstanceState.getInt(CategorieActivity.EXTRA_CATEGORIE_INDEX);
+        fileManager = CryptoFileManager.getInstance();
+        Intent intent = getIntent();
+        int indexCategories = intent.getIntExtra(CategorieActivity.EXTRA_CATEGORIE_INDEX,-1);
+      //  int indexCategories = savedInstanceState.getInt(CategorieActivity.EXTRA_CATEGORIE_INDEX);
         String[] listFileString = fileManager.getFilesListFromCategorie(indexCategories);
         ArrayAdapter<String>  fileListAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listFileString);
         fileListView =(ListView)findViewById(R.id.listViewFiles);

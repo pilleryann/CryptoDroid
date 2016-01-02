@@ -1,10 +1,11 @@
 package com.filecrypt.sylvainandyann.cryptodroid;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +21,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button enterButton;
     private Button saveButton;
     private CryptoFileManager fileManager;
+    private Uri dataUri;
+    private boolean isCryptoMode=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fileManager=CryptoFileManager.getIntance();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if(Intent.ACTION_SEND.equals(action)){
+            dataUri = intent.getData();
+            isCryptoMode=true;
+            Log.i(MainActivity.class.toString()," Share data : "+ dataUri.toString());
+        }
+        fileManager=CryptoFileManager.getInstance();
         userName = (EditText)findViewById(R.id.editTextUserName);
         password = (EditText)findViewById(R.id.editTextPassword);
         enterButton = (Button)findViewById(R.id.buttonEnter);
