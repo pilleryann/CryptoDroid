@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fileManager=CryptoFileManager.getIntance();
         userName = (EditText)findViewById(R.id.editTextUserName);
         password = (EditText)findViewById(R.id.editTextPassword);
         enterButton = (Button)findViewById(R.id.buttonEnter);

@@ -20,6 +20,7 @@ public class FilesActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
+        fileManager = CryptoFileManager.getIntance();
         int indexCategories = savedInstanceState.getInt(CategorieActivity.EXTRA_CATEGORIE_INDEX);
         String[] listFileString = fileManager.getFilesListFromCategorie(indexCategories);
         ArrayAdapter<String>  fileListAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listFileString);
