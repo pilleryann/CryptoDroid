@@ -16,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView" />
+            android:text="Your user name : "
+            android:id="@+id/textViewUserName" />
 
         <EditText
             android:layout_width="match_parent"
@@ -25,21 +25,21 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText" />
+            android:id="@+id/editTextUserName" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView2" />
+            android:text="Your password"
+            android:id="@+id/textViewPassword" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/editText2" />
+            android:id="@+id/editTextPassword" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -49,15 +49,15 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button"
+                android:text="Save"
+                android:id="@+id/buttonSaveUser"
                 android:layout_gravity="bottom" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button2"
+                android:text="Enter"
+                android:id="@+id/buttonEnter"
                 android:layout_gravity="bottom" />
         </LinearLayout>
     </LinearLayout>
