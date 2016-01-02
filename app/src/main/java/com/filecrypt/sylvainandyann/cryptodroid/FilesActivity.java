@@ -4,15 +4,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class FilesActivity extends AppCompatActivity {
+import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
 
-    
+public class FilesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private ListView fileListView;
+    private CryptoFileManager fileManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
+        int indexCategories = savedInstanceState.getInt(CategorieActivity.EXTRA_CATEGORIE_INDEX);
+        String[] listFileString = fileManager.getFilesListFromCategorie(indexCategories);
+        ArrayAdapter<String>  fileListAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listFileString);
+        fileListView =(ListView)findViewById(R.id.listViewFiles);
+        fileListView.setAdapter(fileListAdapter);
+        fileListView.setOnItemClickListener(this);
+
+
+
     }
 
     @Override
@@ -35,5 +51,15 @@ public class FilesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        openFile(position);
+    }
+
+    private void openFile(int filePosition){
+        fileManager.openDecryptedFile(filePosition);
+
     }
 }
