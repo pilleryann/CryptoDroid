@@ -2,4 +2,6 @@
     <string name="app_name">CryptoDroid</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_categorie">Categorie</string>
+    <string name="title_activity_files">Files</string>
 </resources>
