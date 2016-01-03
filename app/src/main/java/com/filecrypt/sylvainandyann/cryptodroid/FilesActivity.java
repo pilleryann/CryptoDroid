@@ -65,7 +65,8 @@ public class FilesActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private void openFile(int filePosition){
         String fileName  = fileListAdapter.getItem(filePosition);
-        fileManager.openDecryptedFile(fileName);
+        Intent intent = fileManager.openDecryptedFile(fileName);
+        startActivity(intent);
 
     }
 }
