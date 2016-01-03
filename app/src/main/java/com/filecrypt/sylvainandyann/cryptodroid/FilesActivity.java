@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
 
+import java.util.List;
+
 public class FilesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private ListView fileListView;
@@ -26,14 +28,11 @@ public class FilesActivity extends AppCompatActivity implements AdapterView.OnIt
         Intent intent = getIntent();
         int indexCategories = intent.getIntExtra(CategorieActivity.EXTRA_CATEGORIE_INDEX, -1);
       //  int indexCategories = savedInstanceState.getInt(CategorieActivity.EXTRA_CATEGORIE_INDEX);
-        String[] listFileString = fileManager.getFilesListFromCategorie(indexCategories);
+        List<String> listFileString = fileManager.getFilesListFromCategorie(indexCategories);
         fileListAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listFileString);
         fileListView =(ListView)findViewById(R.id.listViewFiles);
         fileListView.setAdapter(fileListAdapter);
         fileListView.setOnItemClickListener(this);
-
-
-
     }
 
     @Override

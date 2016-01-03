@@ -17,13 +17,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
-import static android.support.v4.app.ActivityCompat.startActivity;
 
 public class CryptoFileManager
 {
@@ -51,35 +51,49 @@ public class CryptoFileManager
 
     private void loadMap()
     {
-
         File file = new File(dataFolder, ".map");
-        try
+        if(file.exists())
         {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
-            //noinspection unchecked
-            mapFiles = (HashMap<String, CryptoFile>) inputStream.readObject();
-            inputStream.close();
+            try
+            {
+                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+                //noinspection unchecked
+                mapFiles = (HashMap<String, CryptoFile>) inputStream.readObject();
+                inputStream.close();
+            }
+            catch(IOException | ClassNotFoundException e)
+            {
+                // TODO toast can't save data
+                e.printStackTrace();
+            }
         }
-        catch(IOException | ClassNotFoundException e)
+        else
         {
-            // TODO toast can't save data
-            e.printStackTrace();
+            mapFiles = new HashMap<>();
+            saveMap();
         }
     }
 
     private void saveMap()
     {
         File file = new File(dataFolder, ".map");
+
         try
         {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeObject(mapFiles);
-            outputStream.flush();
-            outputStream.close();
+            if(file.createNewFile())
+            {
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeObject(mapFiles);
+                outputStream.flush();
+                outputStream.close();
+            }
+            else
+            {
+                throw new Exception("Can't save data to .map");
+            }
         }
-        catch(IOException e)
+        catch(Exception e)
         {
-            // TODO toast can't load data
             e.printStackTrace();
         }
     }
@@ -109,18 +123,24 @@ public class CryptoFileManager
 
     public String[] getCategorieList()
     {
-        String[] result = {"Images", "Photos", "Text"};
-        return result;
+        return new String[]{"Images", "Photos", "Text", "Raw"};
     }
 
-    public String[] getFilesListFromCategorie(int categorieIndex)
+    // 0 : Image
+    // 1 : Video
+    // 2 : Text
+    // 3 : Raw data
+    public List<String> getFilesListFromCategorie(int categorieIndex)
     {
-        // 0 : Image
-        // 1 : Video
-        // 2 : Text
-        // 3 : Raw data
-        String[][] results = {{"Image1", "Image2", "Image3"}, {"Video1", "Video2", "Video3"}, {"Text1", "Text2", "Text3"}};
-        return results[categorieIndex];
+        List<String> res = new LinkedList<>();
+        for(CryptoFile file : mapFiles.values())
+        {
+            if(file.getCategory() == categorieIndex)
+            {
+                res.add(file.getName());
+            }
+        }
+        return res;
     }
 
     // decrypt and open the file
@@ -137,7 +157,7 @@ public class CryptoFileManager
 
             // launch app
             Uri uri = Uri.fromFile(tmpFile);
-            return new Intent(Intent.ACTION_VIEW,uri);
+            return new Intent(Intent.ACTION_VIEW, uri);
         }
         catch(Exception e)
         {
