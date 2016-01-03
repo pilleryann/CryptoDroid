@@ -124,20 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void enterUser(String user,String password){
-
-        if(isCryptoMode){
-            Intent intent = getIntent();
-            int categorie = Utils.getCategorieOfIntent(intent);
-            fileManager.cryptFile(intent,categorie);
-        }else{
             fileManager.setLogin(user,password);
             Intent intent = new Intent(this, CategorieActivity.class);
             startActivity(intent);
-        }
-
-
     }
-
-
-
 }

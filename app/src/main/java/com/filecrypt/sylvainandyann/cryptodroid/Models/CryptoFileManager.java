@@ -37,7 +37,6 @@ public class CryptoFileManager
 
     private CryptoFileManager()
     {
-        loadMap();
     }
 
     public static CryptoFileManager getInstance()
@@ -132,6 +131,7 @@ public class CryptoFileManager
     // 3 : Raw data
     public List<String> getFilesListFromCategorie(int categorieIndex)
     {
+        loadMap();
         List<String> res = new LinkedList<>();
         for(CryptoFile file : mapFiles.values())
         {
@@ -146,6 +146,7 @@ public class CryptoFileManager
     // decrypt and open the file
     public Intent openDecryptedFile(String filename)
     {
+        loadMap();
         CryptoFile cryptoFile = mapFiles.get(filename);
         try
         {
@@ -166,41 +167,29 @@ public class CryptoFileManager
         }
     }
 
-    public boolean cryptFile(Intent intent, int categorieIndex)
+    public boolean cryptFile(Intent intent, int categorieIndex) throws Exception
     {
-        try
+        if(Intent.ACTION_SEND.equals(intent.getAction()))
         {
-            if(Intent.ACTION_SEND.equals(intent.getAction()))
+            Uri uri = intent.getClipData().getItemAt(0).getUri();
+            if(null == uri)
             {
-                Uri uri = intent.getClipData().getItemAt(0).getUri();
-                if(null == uri)
-                {
-                    throw new Exception("URI is null");
-                }
-                else
-                {
-                    String encryptedFile = encryptFile(uri.getPath());
-                    String filename = org.apache.commons.io.FilenameUtils.getBaseName(uri.getPath());
-                    String extensions = org.apache.commons.io.FilenameUtils.getExtension(uri.getPath());
-                    mapFiles.put(filename, new CryptoFile(filename, encryptedFile, extensions, categorieIndex));
-                    saveMap();
-                    // TODO make toast to confirm
-                }
-            }
-            else if(Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction()))
-            {
-                // TODO for multiple file encryption
+                throw new Exception("URI is null");
             }
             else
             {
-                // TODO Other Action use, do toast and nothing
+                String encryptedFile = encryptFile(uri.getPath());
+                String filename = org.apache.commons.io.FilenameUtils.getBaseName(uri.getPath());
+                String extensions = org.apache.commons.io.FilenameUtils.getExtension(uri.getPath());
+                mapFiles.put(filename, new CryptoFile(filename, encryptedFile, extensions, categorieIndex));
+                saveMap();
+                return true;
             }
         }
-        catch(Exception e)
+        else
         {
-            // TODO catch exception, encryption failed
+            throw new UnsupportedOperationException("Do not recognize action");
         }
-        return false;
     }
 
     /**
@@ -235,7 +224,7 @@ public class CryptoFileManager
      */
     private String encryptFile(String path) throws Exception
     {
-
+        System.out.println("Filename : " + path);
         byte[] data = fileToByteArray(path);
         byte[] key = getKey();
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
