@@ -32,6 +32,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String action = intent.getAction();
         if(Intent.ACTION_SEND.equals(action)){
             dataUri = intent.getData();
+            if(dataUri==null){ AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("File type error");
+                builder.setMessage("It's not a file.");
+                builder.show();
+                return;
+            }
             isCryptoMode=true;
             Log.i(MainActivity.class.toString()," Share data : "+ dataUri.toString());
         }
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Login Failed");
             builder.setMessage("The login or the password is false.");
+            builder.show();
             this.password.getText().clear();
             this.userName.getText().clear();
         }
