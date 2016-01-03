@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File dataFolder = getFilesDir();
         Intent intent = getIntent();
         String action = intent.getAction();
-        //TODO : Initialize shared preference in Manager
-        //TODO : Initialize dataFolder in manager
+        fileManager.setDataFolder(dataFolder);
+        fileManager.setSettings(preferences);
+       
 
         if(Intent.ACTION_SEND.equals(action)){
           /*  dataUri = intent.getData();
