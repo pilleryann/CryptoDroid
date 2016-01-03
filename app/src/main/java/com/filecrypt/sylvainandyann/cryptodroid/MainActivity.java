@@ -51,10 +51,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fileManager=CryptoFileManager.getInstance();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         File dataFolder = getFilesDir();
+        File cacheDir = getCacheDir();
         Intent intent = getIntent();
         String action = intent.getAction();
         fileManager.setDataFolder(dataFolder);
         fileManager.setSettings(preferences);
+        fileManager.setCacheDir(cacheDir);
 
 
         if(Intent.ACTION_SEND.equals(action)){
