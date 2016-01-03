@@ -23,10 +23,13 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import static android.support.v4.app.ActivityCompat.startActivity;
+
 public class CryptoFileManager
 {
     private static CryptoFileManager instance;
     private File dataFolder;
+    private File cacheDir;
     private SharedPreferences settings;
     private HashMap<String, CryptoFile> mapFiles;
     private String username;
@@ -121,9 +124,26 @@ public class CryptoFileManager
     }
 
     // decrypt and open the file
-    public boolean openDecryptedFile(String filename)
+    public Intent openDecryptedFile(String filename)
     {
-        return true;
+        CryptoFile cryptoFile = mapFiles.get(filename);
+        try
+        {
+            byte[] data = decryptFile(filename);
+            File tmpFile = File.createTempFile("cryptodroid_tmp", cryptoFile.getExtensions(), cacheDir);
+            FileOutputStream outputStream = new FileOutputStream(tmpFile);
+            outputStream.write(data);
+            outputStream.close();
+
+            // launch app
+            Uri uri = Uri.fromFile(tmpFile);
+            return new Intent(Intent.ACTION_VIEW,uri);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean cryptFile(Intent intent, int categorieIndex)
@@ -141,7 +161,8 @@ public class CryptoFileManager
                 {
                     String encryptedFile = encryptFile(uri.getPath());
                     String filename = org.apache.commons.io.FilenameUtils.getBaseName(uri.getPath());
-                    mapFiles.put(filename, new CryptoFile(filename, encryptedFile, categorieIndex));
+                    String extensions = org.apache.commons.io.FilenameUtils.getExtension(uri.getPath());
+                    mapFiles.put(filename, new CryptoFile(filename, encryptedFile, extensions, categorieIndex));
                     saveMap();
                     // TODO make toast to confirm
                 }
@@ -235,6 +256,17 @@ public class CryptoFileManager
         return encryptFile.getPath();
     }
 
+    private byte[] decryptFile(String path) throws Exception
+    {
+        byte[] data = fileToByteArray(path);
+        byte[] key = getKey();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+
+        return cipher.doFinal(data);
+    }
+
     private byte[] fileToByteArray(String path) throws IOException
     {
         File file = new File(path);
@@ -255,5 +287,10 @@ public class CryptoFileManager
     public void setSettings(SharedPreferences settings)
     {
         this.settings = settings;
+    }
+
+    public void setCacheDir(File cacheDir)
+    {
+        this.cacheDir = cacheDir;
     }
 }
