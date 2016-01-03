@@ -2,6 +2,7 @@ package com.filecrypt.sylvainandyann.cryptodroid;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,20 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        if(Intent.ACTION_SEND.equals(action)){
-            dataUri = intent.getData();
-            if(dataUri==null){ AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("File type error");
-                builder.setMessage("It's not a file.");
-                builder.show();
-                return;
-            }
-            isCryptoMode=true;
-            Log.i(MainActivity.class.toString()," Share data : "+ dataUri.toString());
-        }
-        fileManager=CryptoFileManager.getInstance();
+        initializeModel();
         userName = (EditText)findViewById(R.id.editTextUserName);
         password = (EditText)findViewById(R.id.editTextPassword);
         enterButton = (Button)findViewById(R.id.buttonEnter);
@@ -56,6 +46,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void initializeModel(){
+        fileManager=CryptoFileManager.getInstance();
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        File dataFolder = getFilesDir();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        //TODO : Initialize shared preference in Manager
+        //TODO : Initialize dataFolder in manager
+
+        if(Intent.ACTION_SEND.equals(action)){
+          /*  dataUri = intent.getData();
+            if(dataUri==null){ AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("File type error");
+                builder.setMessage("It's not a file.");
+                builder.show();
+                return;
+            }*/
+            isCryptoMode=true;
+           // Log.i(MainActivity.class.toString(), " Share data : " + dataUri.toString());
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String userStr = userName.getText().toString();
         String passwordStr = password.getText().toString();
         if(v.equals(enterButton)){
-            enterUser(userStr,passwordStr);
+            enterUser(userStr, passwordStr);
         }else if (v.equals(saveButton)){
             saveUser(userStr,passwordStr);
         }
@@ -92,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void saveUser(String user,String password){
-       boolean loginValid = fileManager.isLoginValid(user,password);
+       boolean loginValid = fileManager.isLoginValid(user, password);
         if(loginValid){
             Intent intent = new Intent(this, CategorieActivity.class);
             startActivity(intent);
@@ -108,8 +120,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void enterUser(String user,String password){
-        fileManager.setLogin(user,password);
-        Intent intent = new Intent(this, CategorieActivity.class);
-        startActivity(intent);
+
+        if(isCryptoMode){
+            Intent intent = getIntent();
+            fileManager.cryptFile(intent,0);//TODO : Change the system of categori index 
+        }else{
+            fileManager.setLogin(user,password);
+            Intent intent = new Intent(this, CategorieActivity.class);
+            startActivity(intent);
+        }
+
+
     }
+
+
+
 }
