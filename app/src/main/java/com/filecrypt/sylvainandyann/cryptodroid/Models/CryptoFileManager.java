@@ -92,11 +92,6 @@ public class CryptoFileManager
                 throw new Exception("Can't save data to .map");
             }
         }
-        catch(IOException e)
-        {
-            // TODO toast can't load data
-            e.printStackTrace();
-        }
         catch(Exception e)
         {
             e.printStackTrace();
