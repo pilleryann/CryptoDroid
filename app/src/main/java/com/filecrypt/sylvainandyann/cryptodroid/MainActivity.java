@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.filecrypt.sylvainandyann.cryptodroid.Models.CryptoFileManager;
+import com.filecrypt.sylvainandyann.cryptodroid.Models.Utils;
 
 import java.io.File;
 
@@ -123,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(isCryptoMode){
             Intent intent = getIntent();
-            fileManager.cryptFile(intent,0);//TODO : Change the system of categori index 
+            int categorie = Utils.getCategorieOfIntent(intent);
+            fileManager.cryptFile(intent,categorie);
         }else{
             fileManager.setLogin(user,password);
             Intent intent = new Intent(this, CategorieActivity.class);
