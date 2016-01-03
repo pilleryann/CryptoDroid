@@ -51,8 +51,9 @@ public class CryptoFileManager
 
     private void loadMap()
     {
-
         File file = new File(dataFolder, ".map");
+        if(file.exists())
+        {
         try
         {
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
@@ -64,22 +65,39 @@ public class CryptoFileManager
         {
             // TODO toast can't save data
             e.printStackTrace();
+        }}
+        else
+        {
+            mapFiles = new HashMap<>();
+            saveMap();
         }
     }
 
     private void saveMap()
     {
         File file = new File(dataFolder, ".map");
+
         try
         {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeObject(mapFiles);
-            outputStream.flush();
-            outputStream.close();
+            if(file.createNewFile())
+            {
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeObject(mapFiles);
+                outputStream.flush();
+                outputStream.close();
+            }
+            else
+            {
+                throw new Exception("Can't save data to .map");
+            }
         }
         catch(IOException e)
         {
             // TODO toast can't load data
+            e.printStackTrace();
+        }
+        catch(Exception e)
+        {
             e.printStackTrace();
         }
     }
