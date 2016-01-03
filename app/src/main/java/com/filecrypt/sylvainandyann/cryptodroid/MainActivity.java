@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String action = intent.getAction();
         fileManager.setDataFolder(dataFolder);
         fileManager.setSettings(preferences);
-       
+
 
         if(Intent.ACTION_SEND.equals(action)){
           /*  dataUri = intent.getData();
