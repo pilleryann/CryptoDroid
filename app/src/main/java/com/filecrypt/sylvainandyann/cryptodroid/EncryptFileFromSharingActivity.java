@@ -22,11 +22,15 @@ public class EncryptFileFromSharingActivity extends AppCompatActivity
         initExitButton();
         Intent intent = getIntent();
         CryptoFileManager cryptoFileManager = CryptoFileManager.getInstance();
+        cryptoFileManager.setCacheDir(getCacheDir());
+        cryptoFileManager.setDataFolder(getFilesDir());
+        cryptoFileManager.setSettings(getPreferences(MODE_PRIVATE));
+        cryptoFileManager.setLogin("","123");
         int categorie = Utils.getCategorieOfIntent(intent);
         try
         {
 
-            if(cryptoFileManager.cryptFile(intent, categorie))
+            if(cryptoFileManager.cryptFile(intent, categorie,getBaseContext()))
             {
                 textView.setText("Encryption successfull");
             }

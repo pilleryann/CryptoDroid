@@ -1,11 +1,11 @@
 package com.filecrypt.sylvainandyann.cryptodroid.Models;
 
-import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by Snipy on 03.01.16.
  */
-public class CryptoFile
+public final class CryptoFile implements Serializable
 {
     private String name;
     private String encryptName;

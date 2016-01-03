@@ -1,9 +1,12 @@
 package com.filecrypt.sylvainandyann.cryptodroid.Models;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -79,7 +82,7 @@ public class CryptoFileManager
 
         try
         {
-            if(file.createNewFile())
+            if(file.exists())
             {
                 ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
                 outputStream.writeObject(mapFiles);
@@ -88,7 +91,17 @@ public class CryptoFileManager
             }
             else
             {
-                throw new Exception("Can't save data to .map");
+                if(file.createNewFile())
+                {
+                    ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                    outputStream.writeObject(mapFiles);
+                    outputStream.flush();
+                    outputStream.close();
+                }
+                else
+                {
+                    throw new Exception("Can't save data to .map");
+                }
             }
         }
         catch(Exception e)
@@ -167,8 +180,9 @@ public class CryptoFileManager
         }
     }
 
-    public boolean cryptFile(Intent intent, int categorieIndex) throws Exception
+    public boolean cryptFile(Intent intent, int categorieIndex, Context context) throws Exception
     {
+        loadMap();
         if(Intent.ACTION_SEND.equals(intent.getAction()))
         {
             Uri uri = intent.getClipData().getItemAt(0).getUri();
@@ -178,7 +192,7 @@ public class CryptoFileManager
             }
             else
             {
-                String encryptedFile = encryptFile(uri.getPath());
+                String encryptedFile = encryptFile(getRealPathFromURI(context, uri));
                 String filename = org.apache.commons.io.FilenameUtils.getBaseName(uri.getPath());
                 String extensions = org.apache.commons.io.FilenameUtils.getExtension(uri.getPath());
                 mapFiles.put(filename, new CryptoFile(filename, encryptedFile, extensions, categorieIndex));
@@ -301,5 +315,25 @@ public class CryptoFileManager
     public void setCacheDir(File cacheDir)
     {
         this.cacheDir = cacheDir;
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri)
+    {
+        Cursor cursor = null;
+        try
+        {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        finally
+        {
+            if(cursor != null)
+            {
+                cursor.close();
+            }
+        }
     }
 }
